@@ -25,7 +25,7 @@ namespace Radio7.Todo.Lucene
 
             foreach (var field in fields)
             {
-                var value = ConvertToString(document, field.PropertyInfo);
+                var value = Serialize(document, field.PropertyInfo);
 
                 if (value == null) continue;
 
@@ -52,7 +52,7 @@ namespace Radio7.Todo.Lucene
 
                 if (luceneField == null) continue;
 
-                if (TryConvertToType(
+                if (TryDeserialize(
                     luceneField.StringValue,
                     field.PropertyInfo.PropertyType,
                     out value))
@@ -104,7 +104,7 @@ namespace Radio7.Todo.Lucene
             return FieldCache[type];
         }
 
-        private static string ConvertToString<T>(T document, PropertyInfo propertyInfo)
+        private static string Serialize<T>(T document, PropertyInfo propertyInfo)
         {
             var typeName = propertyInfo.PropertyType.Name;
 
@@ -116,7 +116,7 @@ namespace Radio7.Todo.Lucene
             }
         }
 
-        private static bool TryConvertToType(string value, Type type, out object result)
+        private static bool TryDeserialize(string value, Type type, out object result)
         {
             result = value;
 
@@ -129,8 +129,7 @@ namespace Radio7.Todo.Lucene
                 switch (typeName)
                 {
                     case "DateTime":
-                        // ReSharper disable once RedundantAssignment
-                        var tempDate = new DateTime(1900, 1, 1);
+                        DateTime tempDate;
 
                         if (
                             !DateTime.TryParse(value, CultureInfo.CurrentCulture, DateTimeStyles.None,

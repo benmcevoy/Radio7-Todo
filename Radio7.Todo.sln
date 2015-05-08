@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Radio7.Todo.Server", "Radio7.Todo.Server\Radio7.Todo.Server.csproj", "{EE671381-0612-44BB-B71F-E046B8CA6CF2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PublishScripts", "PublishScripts", "{94E8C7C9-F3C0-455C-91A4-7D95D208E555}"
+	ProjectSection(SolutionItems) = preProject
+		PublishScripts\AzureWebsitePublishModule.psm1 = PublishScripts\AzureWebsitePublishModule.psm1
+		PublishScripts\Publish-WebApplicationWebsite.ps1 = PublishScripts\Publish-WebApplicationWebsite.ps1
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configurations", "Configurations", "{E74A440A-854D-4C88-B3E5-BAE7E5499E2A}"
+	ProjectSection(SolutionItems) = preProject
+		PublishScripts\Configurations\Radio7TodoServer-WAWS-dev.json = PublishScripts\Configurations\Radio7TodoServer-WAWS-dev.json
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EE671381-0612-44BB-B71F-E046B8CA6CF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE671381-0612-44BB-B71F-E046B8CA6CF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE671381-0612-44BB-B71F-E046B8CA6CF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE671381-0612-44BB-B71F-E046B8CA6CF2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E74A440A-854D-4C88-B3E5-BAE7E5499E2A} = {94E8C7C9-F3C0-455C-91A4-7D95D208E555}
+	EndGlobalSection
+EndGlobal

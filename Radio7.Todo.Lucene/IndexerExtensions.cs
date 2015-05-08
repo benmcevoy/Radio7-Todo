@@ -136,7 +136,10 @@ namespace Radio7.Todo.Lucene
                                 out tempDate)) return false;
 
                         result = tempDate;
+                        return true;
 
+                    case "Guid":
+                        result = Guid.Parse(value);
                         return true;
 
                     default:

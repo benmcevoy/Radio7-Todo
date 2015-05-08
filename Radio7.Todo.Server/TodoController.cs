@@ -5,7 +5,6 @@ using System.Web.Http;
 using Cormo.Injects;
 using Cormo.Web.Api;
 using Lucene.Net.Index;
-using Lucene.Net.Search;
 using Radio7.Todo.Lucene;
 
 namespace Radio7.Todo.Server

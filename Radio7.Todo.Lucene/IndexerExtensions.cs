@@ -104,19 +104,15 @@ namespace Radio7.Todo.Lucene
             return FieldCache[type];
         }
 
-        // this is basic serialization... 
-        // why not just tojson and back on the T? well, we are doing it on a field level...
         private static string ConvertToString<T>(T document, PropertyInfo propertyInfo)
         {
             var typeName = propertyInfo.PropertyType.Name;
 
             switch (typeName)
             {
-                case "DateTime": return DateTime.Parse(propertyInfo.GetValue(document).ToString()).ToString(CultureInfo.InvariantCulture);
-                case "Boolean": return Boolean.Parse(propertyInfo.GetValue(document).ToString()).ToString();
                 case "Guid": return Guid.Parse(propertyInfo.GetValue(document).ToString()).ToString("N");
 
-                default: return (string)Convert.ChangeType(propertyInfo.GetValue(document), propertyInfo.PropertyType);
+                default: return (string)Convert.ChangeType(propertyInfo.GetValue(document), typeof(string));
             }
         }
 

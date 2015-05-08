@@ -50,6 +50,14 @@
       <HintPath>..\packages\Cormo.Web.0.0.1.28\lib\net45\Cormo.Web.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Lucene.Net, Version=3.0.3.0, Culture=neutral, PublicKeyToken=85089178b9ac3181, processorArchitecture=MSIL">
+      <HintPath>..\packages\Lucene.Net.3.0.3\lib\NET40\Lucene.Net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Owin">
       <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
@@ -117,6 +125,16 @@
     <Compile Include="Startup.cs" />
     <Compile Include="TodoController.cs" />
     <Compile Include="TodoTask.cs" />
+    <Compile Include="TodoTaskIndexer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Radio7.Todo.Lucene\Radio7.Todo.Lucene.csproj">
+      <Project>{3d3af208-5328-497e-ac13-f2d3b13f7987}</Project>
+      <Name>Radio7.Todo.Lucene</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

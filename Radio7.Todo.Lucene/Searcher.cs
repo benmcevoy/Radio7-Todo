@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Lucene.Net.Index;
 using Lucene.Net.Search;
+using Lucene.Net.Store;
 
 namespace Radio7.Todo.Lucene
 {
@@ -16,39 +18,41 @@ namespace Radio7.Todo.Lucene
             _searchConfig = searchConfig;
         }
 
-        public virtual IEnumerable<T> Search(Query query)
+        public virtual IEnumerable<T> Search(Term term)
         {
-            var searcher = new IndexSearcher(_searchConfig.Directory);
-            var topDocs = searcher
-                .Search(query, _searchConfig.SearchResultLimit);
-
-            return topDocs.ScoreDocs
-                .Select(scoreDoc =>
-                    searcher.Doc(scoreDoc.Doc).ToResult<T>());
+            return Search(ToExactTermQuery(term));
         }
 
         public virtual IEnumerable<T> Search()
         {
-            var searcher = new IndexSearcher(_searchConfig.Directory);
-            var topDocs = searcher
-                .Search(new MatchAllDocsQuery(), _searchConfig.SearchResultLimit);
-
-            return topDocs.ScoreDocs
-                .Select(scoreDoc =>
-                    searcher.Doc(scoreDoc.Doc).ToResult<T>());
+            return Search(new MatchAllDocsQuery());
         }
 
         public virtual IEnumerable<T> Search(string query)
         {
             query = ToSafeQuery(query);
 
-            var searcher = new IndexSearcher(_searchConfig.Directory);
-            var topDocs = searcher
-                .Search(ToWildCardQuery(query, new T().GetLuceneFieldInfos()), _searchConfig.SearchResultLimit);
+            return Search(ToWildCardQuery(query, new T().GetLuceneFieldInfos()));
+        }
 
-            return topDocs.ScoreDocs
-                .Select(scoreDoc =>
-                    searcher.Doc(scoreDoc.Doc).ToResult<T>());
+        private IEnumerable<T> Search(Query query)
+        {
+            try
+            {
+                Debug.WriteLine(query);
+
+                var searcher = new IndexSearcher(_searchConfig.Directory);
+                var topDocs = searcher
+                    .Search(query, _searchConfig.SearchResultLimit);
+
+                return topDocs.ScoreDocs
+                    .Select(scoreDoc =>
+                        searcher.Doc(scoreDoc.Doc).ToResult<T>());
+            }
+            catch (NoSuchDirectoryException)
+            {
+                return Enumerable.Empty<T>();
+            }
         }
 
         protected Query ToWildCardQuery(string query, IEnumerable<LuceneFieldInfo> fields)
@@ -74,16 +78,18 @@ namespace Radio7.Todo.Lucene
                 }
 
                 wildCardQuery.Add(booleanQuery, Occur.MUST);
-            };
+            }
 
             return wildCardQuery;
         }
 
+        protected Query ToExactTermQuery(Term term)
+        {
+            return new BooleanQuery { new BooleanClause(new TermQuery(term), Occur.MUST) };
+        }
+
         protected static string ToSafeQuery(string query)
         {
-            // search all
-            if (string.IsNullOrWhiteSpace(query)) return "*";
-
             // http://lucene.apache.org/core/2_9_4/queryparsersyntax.html#Escaping%20Special%20Characters
             // remove any special lucene characters
             // + - && || ! ( ) { } [ ] ^ " ~ * ? : \

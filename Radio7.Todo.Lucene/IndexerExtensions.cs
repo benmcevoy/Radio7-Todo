@@ -29,8 +29,11 @@ namespace Radio7.Todo.Lucene
 
                 if (value == null) continue;
 
-                luceneDocument.Add(new Field(field.LuceneFieldAttribute.Name, value,
-                    field.LuceneFieldAttribute.Store, field.LuceneFieldAttribute.Index,
+                luceneDocument.Add(new Field(
+                    field.LuceneFieldAttribute.Name, 
+                    value,
+                    field.LuceneFieldAttribute.Store, 
+                    field.LuceneFieldAttribute.Index,
                     field.LuceneFieldAttribute.TermVector));
             }
 
@@ -111,7 +114,7 @@ namespace Radio7.Todo.Lucene
             {
                 case "DateTime": return DateTime.Parse(propertyInfo.GetValue(document).ToString()).ToString(CultureInfo.InvariantCulture);
                 case "Boolean": return Boolean.Parse(propertyInfo.GetValue(document).ToString()).ToString();
-                case "Guid": return Guid.Parse(propertyInfo.GetValue(document).ToString()).ToString();
+                case "Guid": return Guid.Parse(propertyInfo.GetValue(document).ToString()).ToString("N");
 
                 default: return (string)Convert.ChangeType(propertyInfo.GetValue(document), propertyInfo.PropertyType);
             }

@@ -47,7 +47,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IIndexer.cs" />
     <Compile Include="Indexer.cs" />
     <Compile Include="IndexerExtensions.cs" />
     <Compile Include="ISearchConfig.cs" />

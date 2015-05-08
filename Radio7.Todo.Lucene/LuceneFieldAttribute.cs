@@ -8,7 +8,7 @@ namespace Radio7.Todo.Lucene
     {
         public LuceneFieldAttribute(string name, 
             Field.Store store = Field.Store.YES,
-            Field.Index index = Field.Index.ANALYZED, 
+            Field.Index index = Field.Index.NOT_ANALYZED, 
             Field.TermVector termVector = Field.TermVector.NO, 
             float fuzziness = 0.5f, 
             float boost = 1f)
@@ -19,6 +19,11 @@ namespace Radio7.Todo.Lucene
             Name = name;
             Fuzziness = fuzziness;
             Boost = boost;
+        }
+
+        public override string ToString()
+        {
+            return Name;
         }
 
         public string Name { get; private set; }        

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Web.Http;
 using Cormo.Injects;
 using Cormo.Web.Api;
@@ -11,12 +13,9 @@ namespace Radio7.Todo.Server
     [RestController]
     public class TodoController
     {
-        [Inject]
-        Indexer<TodoTask> _index;
-        [Inject]
-        Searcher<TodoTask> _searcher;
-        [Inject]
-        Parser _parser;
+        [Inject] Indexer<TodoTask> _index;
+        [Inject] Searcher<TodoTask> _searcher;
+        [Inject] Parser _parser;
 
         [Route("todo/"), HttpPost]
         public TodoTask Post(string raw)
@@ -30,12 +29,22 @@ namespace Radio7.Todo.Server
             return todo;
         }
 
-        static readonly BooleanQuery _query = new BooleanQuery { new BooleanClause(new TermQuery(new Term("IsDone", "false")), Occur.MUST) };
+        [Route("todo/done"), HttpPost]
+        public void Done(Guid id)
+        {
+            var doc = (_searcher.Search(new Term("Id", id.ToString("N"))) ?? Enumerable.Empty<TodoTask>()).FirstOrDefault();
+
+            if (doc == null) return;
+
+            doc.IsDone = true;
+
+            _index.Index(new[] { doc });
+        }
 
         [Route("todo/"), HttpGet]
         public IEnumerable<TodoTask> Get()
         {
-            return _searcher.Search(_query);
+            return _searcher.Search(new Term("IsDone", "False")) ?? Enumerable.Empty<TodoTask>();
         }
     }
 }

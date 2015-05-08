@@ -21,11 +21,11 @@ namespace Radio7.Todo.Lucene
             var luceneDocument = new Document();
             var fields = document.GetLuceneFieldInfos();
 
-            // TODO: ensure LuceneDOcumentAttribute id field is always included
+            // TODO: ensure LuceneDocumentAttribute id field is always included
 
             foreach (var field in fields)
             {
-                var value = GetStringValue(document, field.PropertyInfo);
+                var value = ConvertToString(document, field.PropertyInfo);
 
                 if (value == null) continue;
 
@@ -35,20 +35,6 @@ namespace Radio7.Todo.Lucene
             }
 
             return luceneDocument;
-        }
-
-        private static string GetStringValue<T>(T document, PropertyInfo propertyInfo)
-        {
-            var typeName = propertyInfo.PropertyType.Name;
-
-            switch (typeName)
-            {
-                case "DateTime": return DateTime.Parse(propertyInfo.GetValue(document).ToString()).ToString(CultureInfo.InvariantCulture);
-                case "Boolean": return Boolean.Parse(propertyInfo.GetValue(document).ToString()).ToString();
-                case "Guid": return Guid.Parse(propertyInfo.GetValue(document).ToString()).ToString();
-
-                default: return (string)Convert.ChangeType(propertyInfo.GetValue(document), propertyInfo.PropertyType);
-            }
         }
 
         public static T ToResult<T>(this Document document) where T : new()
@@ -113,6 +99,22 @@ namespace Radio7.Todo.Lucene
             FieldCache[type] = fields;
 
             return FieldCache[type];
+        }
+
+        // this is basic serialization... 
+        // why not just tojson and back on the T? well, we are doing it on a field level...
+        private static string ConvertToString<T>(T document, PropertyInfo propertyInfo)
+        {
+            var typeName = propertyInfo.PropertyType.Name;
+
+            switch (typeName)
+            {
+                case "DateTime": return DateTime.Parse(propertyInfo.GetValue(document).ToString()).ToString(CultureInfo.InvariantCulture);
+                case "Boolean": return Boolean.Parse(propertyInfo.GetValue(document).ToString()).ToString();
+                case "Guid": return Guid.Parse(propertyInfo.GetValue(document).ToString()).ToString();
+
+                default: return (string)Convert.ChangeType(propertyInfo.GetValue(document), propertyInfo.PropertyType);
+            }
         }
 
         private static bool TryConvertToType(string value, Type type, out object result)

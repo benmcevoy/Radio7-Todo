@@ -16,6 +16,17 @@ namespace Radio7.Todo.Lucene
             _searchConfig = searchConfig;
         }
 
+        public virtual IEnumerable<T> Search(Query query)
+        {
+            var searcher = new IndexSearcher(_searchConfig.Directory);
+            var topDocs = searcher
+                .Search(query, _searchConfig.SearchResultLimit);
+
+            return topDocs.ScoreDocs
+                .Select(scoreDoc =>
+                    searcher.Doc(scoreDoc.Doc).ToResult<T>());
+        }
+
         public virtual IEnumerable<T> Search()
         {
             var searcher = new IndexSearcher(_searchConfig.Directory);

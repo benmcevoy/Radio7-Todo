@@ -8,11 +8,8 @@ namespace Radio7.Todo.Server
     {
         [LuceneField("Id")]
         public Guid Id { get; set; }
-        public string[] Tags { get; set; }
-
         [LuceneField("Raw")]
         public string Raw { get; set; }
-
         [LuceneField("Title")]
         public string Title { get; set; }
         [LuceneField("Body")]
@@ -21,5 +18,7 @@ namespace Radio7.Todo.Server
         public DateTime CreateDateTime { get; set; }
         [LuceneField("IsDone")]
         public bool IsDone { get; set; }
+
+        public string[] Tags { get; set; }
     }
 }

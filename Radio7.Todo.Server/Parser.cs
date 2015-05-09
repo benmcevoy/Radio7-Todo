@@ -27,13 +27,13 @@ namespace Radio7.Todo.Server
 
         private static IEnumerable<string> GetTags(string raw)
         {
-            var parts = raw.Split(new []{'#'}, StringSplitOptions.RemoveEmptyEntries);
+            var parts = raw.Split(new[] { '#' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (!parts.Any()) yield break;
 
             foreach (var part in parts.Skip(1))
             {
-                var tagValue = part.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+                var tagValue = part.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
 
                 if (string.IsNullOrWhiteSpace(tagValue)) continue;
 
@@ -58,6 +58,8 @@ namespace Radio7.Todo.Server
 
         private static string GetBody(string raw, int offset)
         {
+            if (offset >= raw.Length) return "";
+
             return raw.Substring(offset + 1).Trim();
         }
     }

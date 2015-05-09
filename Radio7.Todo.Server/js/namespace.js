@@ -7,8 +7,6 @@ var todo = {
         list: '#panel',
         notify: '#notification'
     },
-    messenger: {},
-    notification: {},
     commands: {}
 };
 

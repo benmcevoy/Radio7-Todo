@@ -2,7 +2,7 @@ todo.commands.authenticateCommand = function (data) {
     var raw = $(todo.views.tokenInput).val();
 
     if (String.IsNullOrWhiteSpace(raw)) {
-        return todo.commands.notify('Authenticate missing token.');
+        return todo.notify('Authenticate missing token.');
     }
 
     return todo.commands.ajaxPost(
@@ -26,7 +26,7 @@ todo.commands.createCommand = function (data) {
     var raw = $(todo.views.todoInput).val();
 
     if (String.IsNullOrWhiteSpace(raw)) {
-        return todo.commands.notify('You did not enter a task.');
+        return todo.notify('You did not enter a task.');
     }
 
     return todo.commands.ajaxPost(
@@ -41,10 +41,10 @@ todo.commands.doneCommand = function (data) {
         todo.baseUrl + '/todo/done?id=' + encodeURIComponent(data.commandargument),
         todo.commands.refreshCommand);
 
-    return todo.commands.notify('Job done.');
+    return todo.notify('Job done.');
 };
 
-todo.commands.notify = function (message) {
+todo.notify = function (message) {
     $(todo.views.notify).hide();
     $(todo.views.notify)
         .text(message)

@@ -23,12 +23,6 @@ todo.commands.bind = function () {
     });
 };
 
-todo.commands.publish = function (data) {
-    if (data.command) {
-        todo.messenger.notifySubscribers(data.commandargument, data.command);
-    }
-};
-
 todo.commands.ajaxPost = function (id, postaction, onDone) {
     $.ajax({
         type: "POST",

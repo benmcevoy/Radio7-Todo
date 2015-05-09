@@ -1,5 +1,5 @@
 var todo = {
-    baseUrl: 'http://localhost:57880',
+    baseUrl: 'http://todo-radio7.azurewebsites.net',
     views: {
         itemTemplate: '#itemTemplate',
         tokenInput: '#token',

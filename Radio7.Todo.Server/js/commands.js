@@ -1,10 +1,5 @@
 /// <reference path="../typings/jquery/jquery.d.ts"/>
 /// <reference path="~/js/namespace.js" />
-/// <reference path="~/typings/knockout/knockout.d.ts" />
-todo.messenger = new ko.subscribable();
-
-todo.commands.targetPanel = '#panel';
-
 todo.commands.invoke = function (data) {
     if (!data.command) return;
 

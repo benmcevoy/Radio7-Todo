@@ -44,7 +44,7 @@ namespace Radio7.Todo.Server
         private static string GetTitle(string raw)
         {
             var offsetPeriod = raw.IndexOf(".", StringComparison.Ordinal);
-            var offsetNewLine = raw.IndexOf(Environment.NewLine, StringComparison.Ordinal);
+            var offsetNewLine = raw.IndexOf("\n", StringComparison.Ordinal);
 
             if (offsetNewLine == NotFound && offsetPeriod == NotFound)
             {

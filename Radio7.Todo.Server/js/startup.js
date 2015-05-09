@@ -18,11 +18,9 @@ String.IsNullOrWhiteSpace = function() {
     return value.replace(/\s/g, '').length < 1;
 };
 
-var notifer = new todo.notification.notifier('#notification');
-
 $(function () {
-    //    ko.applyBindings(new todo.viewModels.SubscriptionsViewModel());
     todo.commands.bind();
+    todo.commands.invoke({ command: 'refresh' });
 });
 
 

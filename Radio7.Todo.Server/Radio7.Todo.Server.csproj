@@ -118,9 +118,9 @@
   <ItemGroup>
     <Content Include="Default.htm" />
     <Content Include="js\commands.js" />
-    <Content Include="js\commands\domainCommands.js" />
+    <Content Include="js\domainCommands.js" />
     <Content Include="js\namespace.js" />
-    <Content Include="js\notification\notification.js" />
+    <Content Include="js\notification.js" />
     <Content Include="js\startup.js" />
     <Content Include="packages.config" />
     <None Include="Properties\PublishProfiles\Radio7Todo.pubxml" />

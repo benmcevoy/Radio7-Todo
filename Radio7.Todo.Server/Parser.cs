@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Radio7.Todo.Server
 {
@@ -18,8 +20,25 @@ namespace Radio7.Todo.Server
                 Raw = raw,
                 Title = title,
                 Body = body,
-                IsDone = false
+                IsDone = false,
+                Tags = GetTags(raw)
             };
+        }
+
+        private static IEnumerable<string> GetTags(string raw)
+        {
+            var parts = raw.Split(new []{'#'}, StringSplitOptions.RemoveEmptyEntries);
+
+            if (parts == null || !parts.Any()) yield break;
+
+            foreach (var part in parts.Skip(1))
+            {
+                var tagValue = part.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+
+                if (string.IsNullOrWhiteSpace(tagValue)) continue;
+
+                yield return tagValue.ToUpperInvariant();
+            }
         }
 
         private static string GetTitle(string raw)

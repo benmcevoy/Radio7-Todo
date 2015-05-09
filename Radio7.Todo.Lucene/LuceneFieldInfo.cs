@@ -8,6 +8,11 @@ namespace Radio7.Todo.Lucene
 
         public LuceneFieldAttribute LuceneFieldAttribute { get; set; }
 
+        public string Name
+        {
+            get { return LuceneFieldAttribute.Name ?? PropertyInfo.Name; }
+        }
+
         public override string ToString()
         {
             return LuceneFieldAttribute.ToString();

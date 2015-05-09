@@ -12,7 +12,7 @@ namespace Radio7.Todo.Server
         {
             config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
 
-            config.Filters.Add(new ApiSessionAuthorizationFilter());
+            //config.Filters.Add(new ApiSessionAuthorizationFilter());
         }
     }
 }

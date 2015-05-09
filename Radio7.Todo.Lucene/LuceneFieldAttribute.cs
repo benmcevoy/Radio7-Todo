@@ -6,6 +6,11 @@ namespace Radio7.Todo.Lucene
     [AttributeUsage(AttributeTargets.Property)]
     public class LuceneFieldAttribute : Attribute
     {
+        public LuceneFieldAttribute()
+            : this(null)
+        {
+        }
+
         public LuceneFieldAttribute(string name, 
             Field.Store store = Field.Store.YES,
             Field.Index index = Field.Index.NOT_ANALYZED, 
@@ -23,7 +28,7 @@ namespace Radio7.Todo.Lucene
 
         public override string ToString()
         {
-            return Name;
+            return Name ?? "Inferred";
         }
 
         public string Name { get; private set; }        

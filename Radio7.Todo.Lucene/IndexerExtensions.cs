@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -21,21 +22,46 @@ namespace Radio7.Todo.Lucene
             var luceneDocument = new Document();
             var fields = document.GetLuceneFieldInfos();
 
-            // TODO: ensure LuceneDocumentAttribute id field is always included
-
             foreach (var field in fields)
             {
+                if (field.PropertyInfo.PropertyType.IsArray() || field.PropertyInfo.PropertyType.IsEnumerableOfT())
+                {
+                    SerializeEnumerable(luceneDocument, document, field);
+                    continue;
+                }
+
                 var value = Serialize(document, field.PropertyInfo);
-
-                if (value == null) continue;
-
-                luceneDocument.Add(new Field(
-                    field.LuceneFieldAttribute.Name, 
-                    value,
-                    field.LuceneFieldAttribute.Store, 
-                    field.LuceneFieldAttribute.Index,
-                    field.LuceneFieldAttribute.TermVector));
+                luceneDocument.AddField(field, value);
             }
+
+            return luceneDocument;
+        }
+
+        private static void SerializeEnumerable<T>(Document luceneDocument, T document, LuceneFieldInfo field)
+        {
+            var enumerable = (IEnumerable)(field.PropertyInfo.GetValue(document));
+
+            if (enumerable == null) return;
+
+            foreach (var item in enumerable)
+            {
+                // TODO: limited to value types that are convertible to string
+                // should really have a typeconverter attribute on the fieldInfo object as well to allow specific serialization
+                var value = (string)Convert.ChangeType(item, typeof(string));
+                luceneDocument.AddField(field, value);
+            }
+        }
+
+        private static Document AddField(this Document luceneDocument, LuceneFieldInfo field, string value)
+        {
+            if (value == null) return luceneDocument;
+
+            luceneDocument.Add(new Field(
+                field.Name,
+                value,
+                field.LuceneFieldAttribute.Store,
+                field.LuceneFieldAttribute.Index,
+                field.LuceneFieldAttribute.TermVector));
 
             return luceneDocument;
         }
@@ -47,15 +73,17 @@ namespace Radio7.Todo.Lucene
 
             foreach (var field in fields)
             {
-                object value;
-                var luceneField = document.GetField(field.LuceneFieldAttribute.Name);
+                if (field.PropertyInfo.PropertyType.IsArray() || field.PropertyInfo.PropertyType.IsEnumerableOfT())
+                {
+                    TryDeserializeEnumerable(result, document, field);
+                    continue;
+                }
 
+                var luceneField = document.GetField(field.Name);
                 if (luceneField == null) continue;
 
-                if (TryDeserialize(
-                    luceneField.StringValue,
-                    field.PropertyInfo.PropertyType,
-                    out value))
+                object value;
+                if (TryDeserialize(luceneField.StringValue, field.PropertyInfo.PropertyType, out value))
                 {
                     field.PropertyInfo.SetValue(result, value);
                 }
@@ -64,23 +92,72 @@ namespace Radio7.Todo.Lucene
             return result;
         }
 
+        private static void TryDeserializeEnumerable<T>(T result, Document document, LuceneFieldInfo field)
+        {
+            var luceneFields = document.GetFields(field.Name);
+            if (luceneFields == null) return;
+
+            var fieldType = field.PropertyInfo.PropertyType;
+
+            if (fieldType.IsArray())
+            {
+                var argumentType = fieldType.GetElementType();
+                var collection = new ArrayList();
+
+                foreach (var luceneField in luceneFields)
+                {
+                    object value;
+                    if (TryDeserialize(luceneField.StringValue, argumentType, out value))
+                    {
+                        collection.Add(value);
+                    }
+                }
+
+                field.PropertyInfo.SetValue(result, collection);
+                return;
+            }
+
+            if (fieldType.IsEnumerableOfT())
+            {
+                var argumentType = fieldType.GetGenericArguments().First();
+                var listType = typeof(List<>);
+                var concreteType = listType.MakeGenericType(argumentType);
+                var collection = (IList)Activator.CreateInstance(concreteType);
+
+                foreach (var luceneField in luceneFields)
+                {
+                    object value;
+                    if (TryDeserialize(luceneField.StringValue, argumentType, out value))
+                    {
+                        collection.Add(value);
+                    }
+                }
+
+                field.PropertyInfo.SetValue(result, collection);
+            }
+        }
+
         public static Term GetLuceneDocumentIdTerm<T>(this T document)
         {
             var type = typeof(T);
 
-            if (DocumentCache.ContainsKey(type)) return DocumentCache[type].IdTerm;
-
-            var luceneDocumentAttribute = type.GetCustomAttribute<LuceneDocumentAttribute>();
-
-            if (luceneDocumentAttribute == null)
+            if (!DocumentCache.ContainsKey(type))
             {
-                throw new InvalidOperationException(
-                    string.Format("document of type {0} has no LuceneDocumentAttribute", type.Name));
+                var luceneDocumentAttribute = type.GetCustomAttribute<LuceneDocumentAttribute>();
+
+                if (luceneDocumentAttribute == null)
+                {
+                    throw new InvalidOperationException(
+                        string.Format("document of type {0} has no LuceneDocumentAttribute", type.Name));
+                }
+
+                DocumentCache[type] = luceneDocumentAttribute;
             }
 
-            DocumentCache[type] = luceneDocumentAttribute;
+            var field = DocumentCache[type].DocumentIdFieldName;
+            var fieldValue = Serialize(document, type.GetProperty(field));
 
-            return DocumentCache[type].IdTerm;
+            return new Term(field, fieldValue);
         }
 
         public static IEnumerable<LuceneFieldInfo> GetLuceneFieldInfos<T>(this T document)
@@ -110,6 +187,7 @@ namespace Radio7.Todo.Lucene
 
             switch (typeName)
             {
+                case "DateTime": return DateTime.Parse(propertyInfo.GetValue(document).ToString()).ToString("yyyyMMddHHmmssfff");
                 case "Guid": return Guid.Parse(propertyInfo.GetValue(document).ToString()).ToString("N");
 
                 default: return (string)Convert.ChangeType(propertyInfo.GetValue(document), typeof(string));
@@ -150,7 +228,7 @@ namespace Radio7.Todo.Lucene
             }
             catch
             {
-                result = "TryConvertToType failed for " + type.Name;
+                result = "TryDeserialize failed for " + type.Name;
             }
 
             return false;

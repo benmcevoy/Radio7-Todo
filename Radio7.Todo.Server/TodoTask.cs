@@ -1,24 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using Radio7.Todo.Lucene;
 
 namespace Radio7.Todo.Server
 {
-    [LuceneDocument("Id")]
-    public class TodoTask
+    [LuceneDocument("Id")] public class TodoTask
     {
-        [LuceneField("Id")]
-        public Guid Id { get; set; }
-        [LuceneField("Raw")]
-        public string Raw { get; set; }
-        [LuceneField("Title")]
-        public string Title { get; set; }
-        [LuceneField("Body")]
-        public string Body { get; set; }
-        [LuceneField("CreateDateTime")]
-        public DateTime CreateDateTime { get; set; }
-        [LuceneField("IsDone")]
-        public bool IsDone { get; set; }
-
-        public string[] Tags { get; set; }
+        [LuceneField] public Guid Id { get; set; }
+        [LuceneField] public string Raw { get; set; }
+        [LuceneField] public string Title { get; set; }
+        [LuceneField] public string Body { get; set; }
+        [LuceneField] public DateTime CreateDateTime { get; set; }
+        [LuceneField] public bool IsDone { get; set; }
+        [LuceneField] public IEnumerable<string> Tags { get; set; }
     }
 }

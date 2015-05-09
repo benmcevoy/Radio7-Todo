@@ -16,9 +16,7 @@ namespace Radio7.Todo.Lucene
         {
             // TODO: commit in batches
             // TODO: read the docs on indexwriter
-            using (
-                var indexWriter = new IndexWriter(_indexConfig.Directory, _indexConfig.Analyzer, 
-                    true, IndexWriter.MaxFieldLength.LIMITED))
+            using (var indexWriter = new IndexWriter(_indexConfig.Directory, _indexConfig.Analyzer, IndexWriter.MaxFieldLength.LIMITED))
             {
                 foreach (var document in documents)
                 {

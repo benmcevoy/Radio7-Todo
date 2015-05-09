@@ -29,7 +29,7 @@ namespace Radio7.Todo.Server
         {
             var parts = raw.Split(new []{'#'}, StringSplitOptions.RemoveEmptyEntries);
 
-            if (parts == null || !parts.Any()) yield break;
+            if (!parts.Any()) yield break;
 
             foreach (var part in parts.Skip(1))
             {

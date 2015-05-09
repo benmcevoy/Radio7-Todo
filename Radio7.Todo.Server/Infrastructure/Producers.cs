@@ -1,7 +1,7 @@
 ﻿using Cormo.Injects;
 using Radio7.Todo.Lucene;
 
-namespace Radio7.Todo.Server
+namespace Radio7.Todo.Server.Infrastructure
 {
     public class Producers
     {

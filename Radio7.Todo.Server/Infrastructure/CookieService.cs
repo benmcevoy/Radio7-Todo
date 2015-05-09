@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Web;
 using System.Web.Http.Controllers;
 
-namespace Radio7.Todo.Server
+namespace Radio7.Todo.Server.Infrastructure
 {
     public class CookieService
     {

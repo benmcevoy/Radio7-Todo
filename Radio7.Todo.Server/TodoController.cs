@@ -8,6 +8,7 @@ using Cormo.Injects;
 using Cormo.Web.Api;
 using Lucene.Net.Index;
 using Radio7.Todo.Lucene;
+using Radio7.Todo.Server.Infrastructure;
 
 namespace Radio7.Todo.Server
 {

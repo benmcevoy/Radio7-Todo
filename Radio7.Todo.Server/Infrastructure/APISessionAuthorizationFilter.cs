@@ -1,6 +1,6 @@
 ﻿using System.Web.Http;
 
-namespace Radio7.Todo.Server
+namespace Radio7.Todo.Server.Infrastructure
 {
     public class ApiSessionAuthorizationFilter : AuthorizeAttribute
     {

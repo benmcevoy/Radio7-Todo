@@ -2,7 +2,7 @@
 using System.Web.Http;
 using Cormo.Injects;
 
-namespace Radio7.Todo.Server
+namespace Radio7.Todo.Server.Infrastructure
 {
     [Configuration]
     public class Startup

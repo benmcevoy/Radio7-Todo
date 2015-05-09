@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
+using System.Net.Http;
+using System.Web;
 using System.Web.Http;
 using Cormo.Injects;
 using Cormo.Web.Api;
@@ -15,6 +18,7 @@ namespace Radio7.Todo.Server
         [Inject] Indexer<TodoTask> _index;
         [Inject] Searcher<TodoTask> _searcher;
         [Inject] Parser _parser;
+        [Inject] CookieService _cookieService;
 
         [Route("todo/"), HttpPost]
         public TodoTask Post(string raw)
@@ -44,6 +48,17 @@ namespace Radio7.Todo.Server
         public IEnumerable<TodoTask> Get()
         {
             return _searcher.Search(new Term("IsDone", "False")) ?? Enumerable.Empty<TodoTask>();
+        }
+
+        [Route("todo/authenticate"), HttpPost, AllowAnonymous]
+        public void Authenticate(string token)
+        {
+            var key = ConfigurationManager.AppSettings["Radio7.Todo.Server.CookieService.CookieValue"];
+
+            if (token.Equals(key, StringComparison.Ordinal))
+            {
+                _cookieService.Create(new HttpContextWrapper(HttpContext.Current));
+            }
         }
     }
 }

@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+	<head>
+		<title>web client</title>
+		<script type="text/javascript" src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-2.1.3.min.js"></script>
+		<script type="text/javascript" src="//ajax.aspnetcdn.com/ajax/knockout/knockout-2.2.1.js"></script>
+		<script type="text/javascript" src="//ajax.aspnetcdn.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js"></script>
+		<script type="text/javascript" src="/js/namespace.js"></script>
+	    <script type="text/javascript" src="/js/commands.js"></script>
+        <script type="text/javascript" src="/js/notification/notification.js"></script>
+		<script type="text/javascript" src="/js/commands/domainCommands.js"></script>
+		<script type="text/javascript" src="/js/startup.js"></script>
+	</head>
+	<body>
+		<h1>todo</h1>
+	    <section>
+	        <div class="ctrl-holder">
+	            <label for="token">token:</label>
+	            <input type="password" name="token" id="token" />
+	        </div>
+	        <div class="ctrl-holder">
+	            <input type="submit" value="Submit" class="command" data-command="authenticate" />
+	        </div>
+	    </section>
+	    <section>
+	        <div class="ctrl-holder">
+	            <textarea name="todo" id="todo"></textarea>
+	        </div>
+	        <div class="ctrl-holder">
+	            <input type="submit" value="Create" class="command" data-command="create" />
+	        </div>
+	    </section>
+        
+        <section>
+            <div class="ctrl-holder">
+                <textarea name="todo" id="todo"></textarea>
+            </div>
+            <div class="ctrl-holder">
+                <input type="submit" value="Refresh" class="command" data-command="refresh" />
+            </div>
+        </section>
+
+	    <section id="panel">
+	        <ul id="stream" class="nobullet"></ul>
+	    </section>
+        
+        <aside id="notification-container">
+            <div id="notification"></div>
+        </aside>
+
+		<script id="itemTemplate" type="text/x-jQuery-tmpl">
+			<li class="item">
+		        <div>
+		        	<h3>${title}</h3>
+		            <p>${body}</p>
+					<a class="command item"
+		               data-command="done"
+					   data-commandargument="{id: '${id}' }">done</a>
+		        </div>
+		    </li>
+		</script>
+	</body>
+
+</html>

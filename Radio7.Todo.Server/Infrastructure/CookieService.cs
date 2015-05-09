@@ -21,9 +21,10 @@ namespace Radio7.Todo.Server
         public void Create(HttpContextBase context)
         {
             var cookie = new HttpCookie(CookieName);
-
+            
             cookie[CookieItem] = CookieValue;
             cookie.Expires = DateTime.Now.AddMonths(1);
+            cookie.HttpOnly = true;
 
             context.Response.Cookies.Add(cookie);
         }

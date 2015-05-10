@@ -16,7 +16,7 @@ namespace Radio7.Todo.Server
     public class TodoController
     {
         [Inject] IIndexer<TodoTask> _indexer;
-        //[Inject] ISearcher<TodoTask> _searcher;
+        [Inject] ISearcher<TodoTask> _searcher;
         [Inject] Parser _parser;
         [Inject] CookieService _cookieService;
 
@@ -35,20 +35,19 @@ namespace Radio7.Todo.Server
         [Route("todo/done"), HttpPost]
         public void Done(Guid id)
         {
-            //var doc = (_searcher.Search(new Term("Id", id.ToString("N"))) ?? Enumerable.Empty<TodoTask>()).FirstOrDefault();
+            var doc = (_searcher.Search(new Term("Id", id.ToString("N"))) ?? Enumerable.Empty<TodoTask>()).FirstOrDefault();
 
-            //if (doc == null) return;
+            if (doc == null) return;
 
-            //doc.IsDone = true;
+            doc.IsDone = true;
 
-            //_indexer.Index(new[] { doc });
+            _indexer.Index(new[] { doc });
         }
 
         [Route("todo/"), HttpGet]
         public IEnumerable<TodoTask> Get()
         {
-            return null;
-            //return _searcher.Search(new Term("IsDone", "False")) ?? Enumerable.Empty<TodoTask>();
+            return _searcher.Search(new Term("IsDone", "False")) ?? Enumerable.Empty<TodoTask>();
         }
 
         [Route("todo/authenticate"), HttpPost, AllowAnonymous]

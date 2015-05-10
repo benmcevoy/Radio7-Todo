@@ -19,21 +19,7 @@ todo.commands.refreshCommand = function (data) {
         $(todo.views.list).html(output);
     };
 
-    var onFail = function(xhr, b, c) {
-        if (xhr.status == 401) {
-            todo.notify('You are not authenticated.');
-            return;
-        }
-
-        if (xhr.status == 0) {
-            todo.notify('Possibly a x-domain request has been denied. baseUrl is ' + todo.baseUrl);
-            return;
-        }
-
-        todo.notify(c);
-    };
-
-    return todo.commands.ajaxGet(todo.baseUrl + '/todo', onDone, onFail);
+    return todo.commands.ajaxGet(todo.baseUrl + '/todo', onDone, todo.errorNotifier);
 };
 
 todo.commands.createCommand = function (data) {
@@ -56,6 +42,20 @@ todo.commands.doneCommand = function (data) {
         todo.commands.refreshCommand);
 
     return todo.notify('Job done.');
+};
+
+todo.errorNotifier  = function (xhr, b, c) {
+    if (xhr.status == 401) {
+        todo.notify('You are not authenticated.');
+        return;
+    }
+
+    if (xhr.status == 0) {
+        todo.notify('Possibly a x-domain request has been denied. baseUrl is ' + todo.baseUrl);
+        return;
+    }
+
+    if (xhr.status != 200) todo.notify(c);
 };
 
 todo.notify = function (message) {

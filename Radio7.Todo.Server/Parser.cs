@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Radio7.Todo.Server.Infrastructure;
 
 namespace Radio7.Todo.Server
 {
@@ -18,8 +19,8 @@ namespace Radio7.Todo.Server
                 Id = Guid.NewGuid(),
                 CreateDateTime = DateTime.UtcNow,
                 Raw = raw,
-                Title = title,
-                Body = body,
+                Title = title.HtmlEncode(),
+                Body = body.HtmlEncode(),
                 IsDone = false,
                 Tags = GetTags(raw)
             };

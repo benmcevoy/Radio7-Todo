@@ -12,14 +12,23 @@ todo.commands.authenticateCommand = function (data) {
 };
 
 todo.commands.refreshCommand = function (data) {
-    var bindList = function (response) {
+    var onDone = function (response) {
         var output = $(todo.views.itemTemplate)
             .tmpl(response);
 
         $(todo.views.list).html(output);
     };
 
-    return todo.commands.ajaxGet(todo.baseUrl + '/todo', bindList);
+    var onFail = function(xhr, b, c) {
+        if (xhr.status == 401) {
+            todo.notify('You are not authenticated.');
+            return;
+        }
+
+        todo.notify(c);
+    };
+
+    return todo.commands.ajaxGet(todo.baseUrl + '/todo', onDone, onFail);
 };
 
 todo.commands.createCommand = function (data) {

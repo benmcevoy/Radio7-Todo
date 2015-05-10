@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html>
 <head>
     <title>web client</title>
@@ -45,6 +45,12 @@
         li.item .title h3 {
             display: inline;
         }
+
+        #notification {
+            padding: 5px;
+            margin: 0;
+            background: yellow;
+        }
     </style>
 </head>
 <body>
@@ -55,7 +61,7 @@
     <section id="authenticate">
         <div class="ctrl-holder">
             <input type="password" placeholder="auth token" name="token" id="token" />
-            <input type="submit" value="login" class="command" data-command="authenticate" />
+            <input type="button" value="login" class="command" data-command="authenticate" />
         </div>
     </section>
 
@@ -64,7 +70,7 @@
             <textarea name="todo" id="todo"></textarea>
         </div>
         <div class="ctrl-holder">
-            <input type="submit" value="create" class="command" data-command="create" />
+            <input type="button" value="create" class="command" data-command="create" />
             <a href="#" class="command" data-command="refresh">refresh</a>
         </div>
     </section>

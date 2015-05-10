@@ -29,10 +29,15 @@ todo.commands.createCommand = function (data) {
         return todo.notify('You did not enter a task.');
     }
 
+    var onDone = function (response) {
+        todo.commands.invoke({ command: 'refresh' });
+        $(todo.views.todoInput).val('');
+    };
+
     return todo.commands.ajaxPost(
         '',
         todo.baseUrl + '/todo?raw=' + encodeURIComponent(raw),
-        todo.commands.refreshCommand);
+        onDone);
 };
 
 todo.commands.doneCommand = function (data) {

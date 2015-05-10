@@ -9,7 +9,14 @@ using Lucene.Net.Store;
 
 namespace Radio7.Todo.Lucene
 {
-    public class Searcher<T> where T : new()
+    public interface ISearcher<out T> where T : new()
+    {
+        IEnumerable<T> Search(Term term);
+        IEnumerable<T> Search();
+        IEnumerable<T> Search(string query);
+    }
+
+    public class Searcher<T> : ISearcher<T> where T : new()
     {
         private readonly ISearchConfig _searchConfig;
 

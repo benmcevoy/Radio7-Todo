@@ -142,7 +142,7 @@
     <Compile Include="Infrastructure\Startup.cs" />
     <Compile Include="TodoController.cs" />
     <Compile Include="TodoTask.cs" />
-    <Compile Include="TodoTaskIndexer.cs" />
+    <Compile Include="TodoTaskSearchConfig.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Radio7.Todo.Lucene\Radio7.Todo.Lucene.csproj">

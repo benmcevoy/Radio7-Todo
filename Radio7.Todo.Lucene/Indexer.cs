@@ -3,7 +3,12 @@ using Lucene.Net.Index;
 
 namespace Radio7.Todo.Lucene
 {
-    public class Indexer<T>
+    public interface IIndexer<T>
+    {
+        void Index(IEnumerable<T> documents);
+    }
+
+    public class Indexer<T> : IIndexer<T>
     {
         private readonly ISearchConfig _indexConfig;
 

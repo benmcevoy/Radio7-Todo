@@ -25,6 +25,11 @@ todo.commands.refreshCommand = function (data) {
             return;
         }
 
+        if (xhr.status == 0) {
+            todo.notify('Possibly a x-domain request has been denied. baseUrl is ' + todo.baseUrl);
+            return;
+        }
+
         todo.notify(c);
     };
 

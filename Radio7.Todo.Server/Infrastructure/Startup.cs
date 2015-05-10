@@ -10,7 +10,6 @@ namespace Radio7.Todo.Server.Infrastructure
         [Inject]
         void Register(HttpConfiguration config)
         {
-
             config.EnableCors();
 
             config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));

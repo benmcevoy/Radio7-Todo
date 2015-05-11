@@ -13,5 +13,6 @@ namespace Radio7.Todo.Server
         [LuceneField] public DateTime CreateDateTime { get; set; }
         [LuceneField] public bool IsDone { get; set; }
         [LuceneField] public IEnumerable<string> Tags { get; set; }
+        [LuceneField] public DateTime? CompletedDateTime { get; set; }
     }
 }

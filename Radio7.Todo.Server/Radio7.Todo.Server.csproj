@@ -125,6 +125,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Default.htm" />
+    <Content Include="favicon.ico" />
     <Content Include="js\commands.js" />
     <Content Include="js\domainCommands.js" />
     <Content Include="js\namespace.js" />
@@ -153,7 +154,7 @@
     <Compile Include="Infrastructure\Startup.cs" />
     <Compile Include="TodoController.cs" />
     <Compile Include="TodoTask.cs" />
-    <Compile Include="TodoTaskSearchConfig.cs" />
+    <Compile Include="TodoTaskIndexer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Radio7.Todo.Lucene\Radio7.Todo.Lucene.csproj">

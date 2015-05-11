@@ -29,6 +29,7 @@
                 color: white;
                 padding: 5px;
                 margin: 0;
+                display: inline;
             }
 
         section {
@@ -39,6 +40,7 @@
             font-family: arial;
             width: 100%;
             min-height: 100px;
+            max-width: 600px;
             margin: 5px 0px;
         }
 
@@ -52,19 +54,24 @@
             background: yellow;
             display: inline;
         }
+
+        #authenticate {
+            position: absolute;
+            margin: 10px 0 0 50px;
+            display: inline;
+        }
     </style>
 </head>
 <body>
     <header>
         <h1>todo</h1>
-    </header>
-
-    <section id="authenticate">
-        <div class="ctrl-holder">
+        <div id="authenticate" class="ctrl-holder">
             <input type="password" placeholder="auth token" name="token" id="token" />
             <input type="button" value="login" class="command" data-command="authenticate" />
         </div>
-    </section>
+    </header>
+
+
 
     <section id="addTask">
         <div class="ctrl-holder">

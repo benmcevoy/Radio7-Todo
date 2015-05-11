@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Web.Hosting;
+using Cormo.Injects;
 using Lucene.Net.Analysis;
 using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Store;
@@ -9,6 +10,25 @@ using Version = Lucene.Net.Util.Version;
 
 namespace Radio7.Todo.Server
 {
+    public class TodoTaskIndexer : Indexer<TodoTask>
+    {
+        [Inject]
+        public TodoTaskIndexer(ISearchConfig config)
+            : base(config)
+        {
+        }
+    }
+
+    public class TodoTaskSearcher : Searcher<TodoTask>
+    {
+        [Inject]
+        public TodoTaskSearcher(ISearchConfig searchConfig)
+            : base(searchConfig)
+        {
+        }
+    }
+
+    [Default]
     public class TodoTaskSearchConfig : ISearchConfig
     {
         public TodoTaskSearchConfig()

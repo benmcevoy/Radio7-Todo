@@ -7,7 +7,6 @@ using System.Web.Http;
 using Cormo.Injects;
 using Cormo.Web.Api;
 using Lucene.Net.Index;
-using Radio7.Todo.Lucene;
 using Radio7.Todo.Server.Infrastructure;
 
 namespace Radio7.Todo.Server
@@ -15,10 +14,11 @@ namespace Radio7.Todo.Server
     [RestController]
     public class TodoController
     {
-        [Inject] IIndexer<TodoTask> _indexer;
-        [Inject] ISearcher<TodoTask> _searcher;
+        [Inject] TodoTaskIndexer  _indexer;
+        [Inject] TodoTaskSearcher _searcher;
         [Inject] Parser _parser;
         [Inject] CookieService _cookieService;
+        [Inject, Value] string CookieValue;
 
         [Route("todo/"), HttpPost]
         public TodoTask Post(string raw)
@@ -40,6 +40,7 @@ namespace Radio7.Todo.Server
             if (doc == null) return;
 
             doc.IsDone = true;
+            doc.CompletedDateTime = DateTime.UtcNow;
 
             _indexer.Index(new[] { doc });
         }
@@ -53,9 +54,7 @@ namespace Radio7.Todo.Server
         [Route("todo/authenticate"), HttpPost, AllowAnonymous]
         public void Authenticate(string token)
         {
-            var key = ConfigurationManager.AppSettings["Radio7.Todo.Server.CookieService.CookieValue"];
-
-            if (token.Equals(key, StringComparison.Ordinal))
+            if (token.Equals(CookieValue, StringComparison.Ordinal))
             {
                 _cookieService.Create(new HttpContextWrapper(HttpContext.Current));
             }

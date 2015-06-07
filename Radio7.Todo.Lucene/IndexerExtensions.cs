@@ -22,6 +22,8 @@ namespace Radio7.Todo.Lucene
             var luceneDocument = new Document();
             var fields = document.GetLuceneFieldInfos();
 
+            luceneDocument.AddSourceField(document);
+
             foreach (var field in fields)
             {
                 if (field.PropertyInfo.PropertyType.IsArray() || field.PropertyInfo.PropertyType.IsEnumerableOfT())
@@ -52,6 +54,20 @@ namespace Radio7.Todo.Lucene
             }
         }
 
+        private static Document AddSourceField(this Document luceneDocument, object document)
+        {
+            if (document == null) return luceneDocument;
+
+            luceneDocument.Add(new Field(
+                "_source",
+                Newtonsoft.Json.JsonConvert.SerializeObject(document),
+                Field.Store.YES,
+                Field.Index.NO,
+                Field.TermVector.NO));
+
+            return luceneDocument;
+        }
+
         private static Document AddField(this Document luceneDocument, LuceneFieldInfo field, string value)
         {
             if (value == null) return luceneDocument;
@@ -68,6 +84,9 @@ namespace Radio7.Todo.Lucene
 
         public static T ToResult<T>(this Document document) where T : new()
         {
+            if (document.GetField("_source") != null)
+                return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(document.GetField("_source").StringValue);
+
             var result = new T();
             var fields = result.GetLuceneFieldInfos();
 
@@ -90,51 +109,6 @@ namespace Radio7.Todo.Lucene
             }
 
             return result;
-        }
-
-        private static void TryDeserializeEnumerable<T>(T result, Document document, LuceneFieldInfo field)
-        {
-            var luceneFields = document.GetFields(field.Name);
-            if (luceneFields == null) return;
-
-            var fieldType = field.PropertyInfo.PropertyType;
-
-            if (fieldType.IsArray())
-            {
-                var argumentType = fieldType.GetElementType();
-                var collection = new ArrayList();
-
-                foreach (var luceneField in luceneFields)
-                {
-                    object value;
-                    if (TryDeserialize(luceneField.StringValue, argumentType, out value))
-                    {
-                        collection.Add(value);
-                    }
-                }
-
-                field.PropertyInfo.SetValue(result, collection);
-                return;
-            }
-
-            if (fieldType.IsEnumerableOfT())
-            {
-                var argumentType = fieldType.GetGenericArguments().First();
-                var listType = typeof(List<>);
-                var concreteType = listType.MakeGenericType(argumentType);
-                var collection = (IList)Activator.CreateInstance(concreteType);
-
-                foreach (var luceneField in luceneFields)
-                {
-                    object value;
-                    if (TryDeserialize(luceneField.StringValue, argumentType, out value))
-                    {
-                        collection.Add(value);
-                    }
-                }
-
-                field.PropertyInfo.SetValue(result, collection);
-            }
         }
 
         public static Term GetLuceneDocumentIdTerm<T>(this T document)
@@ -191,6 +165,51 @@ namespace Radio7.Todo.Lucene
                 case "Guid": return Guid.Parse(propertyInfo.GetValue(document).ToString()).ToString("N");
 
                 default: return (string)Convert.ChangeType(propertyInfo.GetValue(document), typeof(string));
+            }
+        }
+
+        private static void TryDeserializeEnumerable<T>(T result, Document document, LuceneFieldInfo field)
+        {
+            var luceneFields = document.GetFields(field.Name);
+            if (luceneFields == null) return;
+
+            var fieldType = field.PropertyInfo.PropertyType;
+
+            if (fieldType.IsArray())
+            {
+                var argumentType = fieldType.GetElementType();
+                var collection = new ArrayList();
+
+                foreach (var luceneField in luceneFields)
+                {
+                    object value;
+                    if (TryDeserialize(luceneField.StringValue, argumentType, out value))
+                    {
+                        collection.Add(value);
+                    }
+                }
+
+                field.PropertyInfo.SetValue(result, collection);
+                return;
+            }
+
+            if (fieldType.IsEnumerableOfT())
+            {
+                var argumentType = fieldType.GetGenericArguments().First();
+                var listType = typeof(List<>);
+                var concreteType = listType.MakeGenericType(argumentType);
+                var collection = (IList)Activator.CreateInstance(concreteType);
+
+                foreach (var luceneField in luceneFields)
+                {
+                    object value;
+                    if (TryDeserialize(luceneField.StringValue, argumentType, out value))
+                    {
+                        collection.Add(value);
+                    }
+                }
+
+                field.PropertyInfo.SetValue(result, collection);
             }
         }
 

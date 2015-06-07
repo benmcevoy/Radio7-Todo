@@ -17,7 +17,7 @@ namespace Radio7.Todo.Server
             return new TodoTask
             {
                 Id = Guid.NewGuid(),
-                CreateDateTime = DateTime.UtcNow,
+                CreatedDateTime = DateTime.UtcNow,
                 Raw = raw,
                 Title = title.HtmlEncode(),
                 Body = body.HtmlEncode(),

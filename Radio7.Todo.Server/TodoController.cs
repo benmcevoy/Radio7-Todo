@@ -51,6 +51,12 @@ namespace Radio7.Todo.Server
             return _searcher.Search(new Term("IsDone", "False")) ?? Enumerable.Empty<TodoTask>();
         }
 
+        [Route("todo/export"), HttpGet]
+        public IEnumerable<TodoTask> Export()
+        {
+            return _searcher.Search() ?? Enumerable.Empty<TodoTask>();
+        }
+
         [Route("todo/authenticate"), HttpPost, AllowAnonymous]
         public void Authenticate(string token)
         {

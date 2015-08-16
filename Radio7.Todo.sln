@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Radio7.Todo.Server", "Radio7.Todo.Server\Radio7.Todo.Server.csproj", "{EE671381-0612-44BB-B71F-E046B8CA6CF2}"
 EndProject
@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Radio7.Todo.Lucene", "Radio
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{E9329255-A206-4FB2-9017-AE6E08D8C982}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Radio7.Todo.Tests", "Radio7.Todo.Tests\Radio7.Todo.Tests.csproj", "{9B7BC21E-0362-4CE7-84E3-A2B52A1A0FEC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,6 +36,10 @@ Global
 		{3D3AF208-5328-497E-AC13-F2D3B13F7987}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3D3AF208-5328-497E-AC13-F2D3B13F7987}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3D3AF208-5328-497E-AC13-F2D3B13F7987}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B7BC21E-0362-4CE7-84E3-A2B52A1A0FEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B7BC21E-0362-4CE7-84E3-A2B52A1A0FEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B7BC21E-0362-4CE7-84E3-A2B52A1A0FEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B7BC21E-0362-4CE7-84E3-A2B52A1A0FEC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

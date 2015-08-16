@@ -22,7 +22,7 @@ namespace Radio7.Todo.Server
                 Title = title.HtmlEncode(),
                 Body = body.HtmlEncode(),
                 IsDone = false,
-                Tags = GetTags(raw)
+                Tags = GetTags(raw).Distinct()
             };
         }
 
@@ -32,29 +32,43 @@ namespace Radio7.Todo.Server
 
             if (!parts.Any()) yield break;
 
-            foreach (var part in parts.Skip(1))
+            foreach (var part in parts)
             {
-                var tagValue = part.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+                var tagValue = part.Split(new[] { ' ', '.', '\n', '?', '!', ',' }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
 
                 if (string.IsNullOrWhiteSpace(tagValue)) continue;
 
-                yield return tagValue.ToUpperInvariant();
+                yield return tagValue.Trim().ToUpperInvariant();
             }
         }
 
         private static string GetTitle(string raw)
         {
-            var offsetPeriod = raw.IndexOf(".", StringComparison.Ordinal);
-            var offsetNewLine = raw.IndexOf("\n", StringComparison.Ordinal);
+            if (string.IsNullOrWhiteSpace(raw)) return "";
 
-            if (offsetNewLine == NotFound && offsetPeriod == NotFound)
-            {
-                return raw;
-            }
+            var terminator = SentenceTerminators(raw)
+                .Where(x => x.Item1)
+                .Min(x => x.Item2);
 
-            if (offsetNewLine == NotFound) return raw.Substring(0, offsetPeriod);
+            return (terminator == NotFound)
+                ? raw.Trim()
+                : raw.Substring(0, terminator).Trim();
+        }
 
-            return raw.Substring(0, offsetNewLine).Trim();
+        private static IEnumerable<Tuple<bool, int>> SentenceTerminators(string raw)
+        {
+            yield return FindOffset(raw, ".");
+            yield return FindOffset(raw, "?");
+            yield return FindOffset(raw, "!");
+            yield return FindOffset(raw, "\n");
+            yield return new Tuple<bool, int>(false, NotFound);
+        }
+
+        private static Tuple<bool, int> FindOffset(string value, string test)
+        {
+            var offset = value.IndexOf(test, StringComparison.Ordinal);
+
+            return new Tuple<bool, int>(offset > NotFound, offset + 1);
         }
 
         private static string GetBody(string raw, int offset)

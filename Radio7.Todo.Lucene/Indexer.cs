@@ -1,11 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System.Threading.Tasks;
+using System.Collections.Generic;
 using Lucene.Net.Index;
+using System;
 
 namespace Radio7.Todo.Lucene
 {
     public interface IIndexer<T>
     {
         void Index(IEnumerable<T> documents);
+
+        Task IndexAsync(IEnumerable<T> documents);
     }
 
     public class Indexer<T> : IIndexer<T>
@@ -30,6 +34,22 @@ namespace Radio7.Todo.Lucene
 
                 indexWriter.Commit();
             }
+        }
+
+        public Task IndexAsync(IEnumerable<T> documents)
+        {
+            return Task.Factory.StartNew(() =>
+            {
+                using (var indexWriter = new IndexWriter(_indexConfig.Directory, _indexConfig.Analyzer, IndexWriter.MaxFieldLength.LIMITED))
+                {
+                    foreach (var document in documents)
+                    {
+                        Index(indexWriter, document);
+                    }
+
+                    indexWriter.Commit();
+                }
+            });
         }
 
         protected virtual void Index(IndexWriter indexWriter, T document)

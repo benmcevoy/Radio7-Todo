@@ -57,11 +57,14 @@ namespace Radio7.Todo.Server
 
         private static IEnumerable<Tuple<bool, int>> SentenceTerminators(string raw)
         {
+            // look for terminator
             yield return FindOffset(raw, ".");
             yield return FindOffset(raw, "?");
             yield return FindOffset(raw, "!");
             yield return FindOffset(raw, "\n");
-            yield return new Tuple<bool, int>(false, NotFound);
+
+            // return the fragment
+            yield return new Tuple<bool, int>(true, raw.Length);
         }
 
         private static Tuple<bool, int> FindOffset(string value, string test)

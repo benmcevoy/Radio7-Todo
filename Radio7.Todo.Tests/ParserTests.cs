@@ -11,8 +11,10 @@ namespace Radio7.Todo.Tests
             InlineData("Title ends on new line or sentence? More on the first line.\r\nBody.", "Title ends on new line or sentence?"),
             InlineData("Title ends on new line or sentence! More on the first line.\r\nBody.", "Title ends on new line or sentence!"),
             InlineData("Title ends on new line or sentence. More on the first line.\r\nBody.", "Title ends on new line or sentence."),
-            InlineData("#Title cannot be markdown\r\nBody.", "#Title cannot be markdown")
-            InlineData("Title can end on newline\r\nbody.", "Title can end on newline")]
+            InlineData("#Title cannot be markdown\r\nBody.", "#Title cannot be markdown"),
+            InlineData("Title can end on newline\r\nbody.", "Title can end on newline"),
+            InlineData("Title is fragment", "Title is fragment"),
+            InlineData("Title", "Title")]
         public void Parser_ParsesTitleAsFirstSentenceOrLine(string value, string expected)
         {
             // arrange

@@ -8,9 +8,8 @@ namespace Radio7.Todo.Server
 {
     public class Parser
     {
-        private const int NotFound = -1;
-
         [Inject] Markdown _markdown;
+        private const int NotFound = -1;
 
         public TodoTask Parse(string raw)
         {
@@ -23,7 +22,8 @@ namespace Radio7.Todo.Server
                 CreatedDateTime = DateTime.UtcNow,
                 Raw = raw,
                 Title = title.HtmlEncode(),
-                Body = _markdown.Render( body.HtmlEncode()),
+                // do the markdown rendering on WRITE so we so not have to on the many READS
+                Body = _markdown.Render(body.HtmlEncode()),
                 IsDone = false,
                 Tags = GetTags(raw).Distinct()
             };
@@ -37,7 +37,8 @@ namespace Radio7.Todo.Server
 
             foreach (var part in parts)
             {
-                var tagValue = part.Split(new[] { ' ', '.', '\n', '?', '!', ',' }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+                var tagValue = part.Split(new[] { ' ', '.', '\n', '?', '!', ',' },
+                    StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
 
                 if (string.IsNullOrWhiteSpace(tagValue)) continue;
 
@@ -79,9 +80,9 @@ namespace Radio7.Todo.Server
 
         private static string GetBody(string raw, int offset)
         {
-            if (offset >= raw.Length) return "";
-
-            return raw.Substring(offset + 1).Trim();
+            return (offset >= raw.Length)
+                ? ""
+                : raw.Substring(offset + 1).Trim();
         }
     }
 }

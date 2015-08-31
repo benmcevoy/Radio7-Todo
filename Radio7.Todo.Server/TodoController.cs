@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
+using System.Threading.Tasks;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
@@ -21,19 +21,19 @@ namespace Radio7.Todo.Server
         [Inject, Value] string CookieValue;
 
         [Route("todo/"), HttpPost]
-        public TodoTask Post(string raw)
+        public async Task<TodoTask> Post(string raw)
         {
             if (string.IsNullOrWhiteSpace(raw)) return null;
 
             var todo = _parser.Parse(raw);
 
-            _indexer.Index(new[] { todo });
+            await _indexer.IndexAsync(new[] { todo });
 
             return todo;
         }
 
         [Route("todo/done"), HttpPost]
-        public void Done(Guid id)
+        public async Task Done(Guid id)
         {
             var doc = (_searcher.Search(new Term("Id", id.ToString("N"))) ?? Enumerable.Empty<TodoTask>()).FirstOrDefault();
 
@@ -42,7 +42,7 @@ namespace Radio7.Todo.Server
             doc.IsDone = true;
             doc.CompletedDateTime = DateTime.UtcNow;
 
-            _indexer.Index(new[] { doc });
+            await _indexer.IndexAsync(new[] { doc });
         }
 
         [Route("todo/"), HttpGet]

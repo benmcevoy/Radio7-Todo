@@ -21,6 +21,7 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <TypeScriptToolsVersion>1.0</TypeScriptToolsVersion>
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -147,6 +148,7 @@
   <ItemGroup>
     <Compile Include="Infrastructure\APISessionAuthorizationFilter.cs" />
     <Compile Include="Infrastructure\CookieService.cs" />
+    <Compile Include="Infrastructure\Markdown.cs" />
     <Compile Include="Infrastructure\StringExtensions.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Infrastructure\Producers.cs" />

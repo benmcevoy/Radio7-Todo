@@ -7,8 +7,8 @@ todo.commands.authenticateCommand = function (data) {
 
     return todo.commands.ajaxPost(
         '',
-        todo.baseUrl + '/todo/authenticate?token=' + encodeURIComponent(raw),
-        todo.commands.refreshCommand);
+        todo.baseUrl + '/todo/authenticate?token=' + encodeURIComponent(raw))
+        .done(todo.commands.refreshCommand);
 };
 
 todo.commands.refreshCommand = function (data) {
@@ -19,7 +19,10 @@ todo.commands.refreshCommand = function (data) {
         $(todo.views.list).html(output);
     };
 
-    return todo.commands.ajaxGet(todo.baseUrl + '/todo', onDone, todo.errorNotifier);
+    return todo.commands
+        .ajaxGet(todo.baseUrl + '/todo')
+        .done(onDone)
+        .fail(todo.errorNotifier);
 };
 
 todo.commands.createCommand = function (data) {
@@ -30,26 +33,26 @@ todo.commands.createCommand = function (data) {
     }
 
     var onDone = function (response) {
-        todo.commands.invoke({ command: 'refresh' });
+        todo.commands.refreshCommand();
         $(todo.views.todoInput).val('');
     };
 
     return todo.commands.ajaxPost(
         '',
-        todo.baseUrl + '/todo?raw=' + encodeURIComponent(raw),
-        onDone);
+        todo.baseUrl + '/todo?raw=' + encodeURIComponent(raw))
+        .done(onDone);
 };
 
 todo.commands.doneCommand = function (data) {
     todo.commands.ajaxPost(
         '',
-        todo.baseUrl + '/todo/done?id=' + encodeURIComponent(data.commandargument),
-        todo.commands.refreshCommand);
+        todo.baseUrl + '/todo/done?id=' + encodeURIComponent(data.commandargument))
+        .done(todo.commands.refreshCommand);
 
     return todo.notify('Job done.');
 };
 
-todo.errorNotifier  = function (xhr, b, c) {
+todo.errorNotifier = function (xhr, b, c) {
     if (xhr.status == 401) {
         todo.notify('You are not authenticated.');
         return;

@@ -23,23 +23,19 @@ todo.commands.bind = function () {
     });
 };
 
-todo.commands.ajaxPost = function (id, postaction, onDone, onFail) {
-    $.ajax({
+todo.commands.ajaxPost = function (id, postaction, data) {
+    return $.ajax({
         type: "POST",
         url: postaction,
         data: { '': id }
-    })
-    .done(onDone)
-    .fail(onFail);
+    });
 };
 
-todo.commands.ajaxGet = function (action, onDone, onFail) {
+todo.commands.ajaxGet = function (action) {
     if (action) {
-        $.ajax({
+        return $.ajax({
             url: action,
             xhrFields: { withCredentials: true }
-        })
-        .done(onDone)
-        .fail(onFail);
+        });
     }
 };

@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using Radio7.Todo.Server.Infrastructure;
+using Cormo.Injects;
 
 namespace Radio7.Todo.Server
 {
     public class Parser
     {
         private const int NotFound = -1;
+
+        [Inject] Markdown _markdown;
 
         public TodoTask Parse(string raw)
         {
@@ -20,7 +23,7 @@ namespace Radio7.Todo.Server
                 CreatedDateTime = DateTime.UtcNow,
                 Raw = raw,
                 Title = title.HtmlEncode(),
-                Body = body.HtmlEncode(),
+                Body = _markdown.Render( body.HtmlEncode()),
                 IsDone = false,
                 Tags = GetTags(raw).Distinct()
             };

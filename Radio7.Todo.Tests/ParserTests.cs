@@ -14,7 +14,8 @@ namespace Radio7.Todo.Tests
             InlineData("#Title cannot be markdown\r\nBody.", "#Title cannot be markdown"),
             InlineData("Title can end on newline\r\nbody.", "Title can end on newline"),
             InlineData("Title is fragment", "Title is fragment"),
-            InlineData("Title", "Title")]
+            InlineData("Title", "Title"),
+            InlineData("domain.com", "domain.com")]
         public void Parser_ParsesTitleAsFirstSentenceOrLine(string value, string expected)
         {
             // arrange

@@ -23,7 +23,7 @@ namespace Radio7.Todo.Server
                 Raw = raw,
                 Title = title.HtmlEncode(),
                 // do the markdown rendering on WRITE so we so not have to on the many READS
-                Body = _markdown.Render(body.HtmlEncode()),
+                Body = _markdown.Render(body),
                 IsDone = false,
                 Tags = GetTags(raw).Distinct()
             };

@@ -36,7 +36,7 @@ namespace Radio7.Todo.Server
             var path = HostingEnvironment.MapPath("~/app_data/index");
             Directory = new SimpleFSDirectory(new DirectoryInfo(path));
             Analyzer = new StandardAnalyzer(Version.LUCENE_30);
-            SearchResultLimit = 20;
+            SearchResultLimit = int.MaxValue;
         }
 
         public Directory Directory { get; private set; }

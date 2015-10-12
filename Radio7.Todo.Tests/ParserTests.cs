@@ -19,7 +19,7 @@ namespace Radio7.Todo.Tests
         public void Parser_ParsesTitleAsFirstSentenceOrLine(string value, string expected)
         {
             // arrange
-            var sut = new Parser();
+            var sut = new Parser(new Server.Infrastructure.Markdown());
 
             // act
             var actual = sut.Parse(value);
@@ -35,7 +35,7 @@ namespace Radio7.Todo.Tests
         public void Parser_ParsesFindsTagsOnlyOnce(string value, IEnumerable<object> expected)
         {
             // arrange
-            var sut = new Parser();
+            var sut = new Parser(new Server.Infrastructure.Markdown());
 
             // act
             var actual = sut.Parse(value);
@@ -55,7 +55,7 @@ namespace Radio7.Todo.Tests
         public void Parser_ParsesFindsTagsSeperatedBy(string value, IEnumerable<object> expected)
         {
             // arrange
-            var sut = new Parser();
+            var sut = new Parser(new Server.Infrastructure.Markdown());
 
             // act
             var actual = sut.Parse(value);

@@ -2,14 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using Radio7.Todo.Server.Infrastructure;
-using Cormo.Injects;
 
 namespace Radio7.Todo.Server
 {
     public class Parser
     {
-        [Inject] Markdown _markdown;
+        private readonly Markdown _markdown;
         private const int NotFound = -1;
+
+        public Parser(Markdown markdown)
+        {
+            _markdown = markdown;
+        }
 
         public TodoTask Parse(string raw)
         {

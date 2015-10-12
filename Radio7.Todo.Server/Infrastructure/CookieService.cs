@@ -1,17 +1,23 @@
-﻿using System;
+﻿using Radio7.Unity.Decorators;
+using System;
 using System.Linq;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http.Controllers;
-using Cormo.Injects;
 
 namespace Radio7.Todo.Server.Infrastructure
 {
+    [Singleton]
     public class CookieService
     {
         private const string CookieName = "E2097506F1A7418BB379596BD0D17B48";
         private const string CookieItem = "D8DA259A422A4B0B890BF0CE6F4C1224";
-        [Inject, Value] string CookieValue = "189D480A98894A158E8AB1DF756CF08D";
+        private readonly string CookieValue = "189D480A98894A158E8AB1DF756CF08D";
+
+        public CookieService(Producers producers)
+        {
+            CookieValue = producers.CreateCookieValue();
+        }
 
         public void Create(HttpContextBase context)
         {

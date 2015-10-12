@@ -1,34 +1,34 @@
 ﻿using System.IO;
 using System.Web.Hosting;
-using Cormo.Injects;
 using Lucene.Net.Analysis;
 using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Store;
 using Radio7.Todo.Lucene;
 using Directory = Lucene.Net.Store.Directory;
 using Version = Lucene.Net.Util.Version;
+using Radio7.Unity.Decorators;
 
 namespace Radio7.Todo.Server
 {
+    [Singleton]
     public class TodoTaskIndexer : Indexer<TodoTask>
     {
-        [Inject]
         public TodoTaskIndexer(ISearchConfig config)
             : base(config)
         {
         }
     }
 
+    [Singleton]
     public class TodoTaskSearcher : Searcher<TodoTask>
     {
-        [Inject]
         public TodoTaskSearcher(ISearchConfig searchConfig)
             : base(searchConfig)
         {
         }
     }
 
-    [Default]
+    [Singleton]
     public class TodoTaskSearchConfig : ISearchConfig
     {
         public TodoTaskSearchConfig()

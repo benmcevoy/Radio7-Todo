@@ -1,20 +1,14 @@
-﻿using Cormo.Injects;
-using Radio7.Todo.Lucene;
+﻿using Radio7.Unity.Decorators;
+using System.Configuration;
 
 namespace Radio7.Todo.Server.Infrastructure
 {
+    [Singleton]
     public class Producers
     {
-        [Produces]
-        public Indexer<TodoTask> CreateIndexer()
+        public string CreateCookieValue()
         {
-            return new Indexer<TodoTask>(new TodoTaskSearchConfig());
-        }
-
-        [Produces]
-        public Searcher<TodoTask> CreateSearcher()
-        {
-            return new Searcher<TodoTask>(new TodoTaskSearchConfig());
+            return ConfigurationManager.AppSettings["CookieValue"];
         }
     }
 }

@@ -4,21 +4,28 @@ using System.Threading.Tasks;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
-using Cormo.Injects;
-using Cormo.Web.Api;
 using Lucene.Net.Index;
 using Radio7.Todo.Server.Infrastructure;
+using Radio7.Todo.Lucene;
 
 namespace Radio7.Todo.Server
 {
-    [RestController]
-    public class TodoController
+    public class TodoController : ApiController
     {
-        [Inject] TodoTaskIndexer  _indexer;
-        [Inject] TodoTaskSearcher _searcher;
-        [Inject] Parser _parser;
-        [Inject] CookieService _cookieService;
-        [Inject, Value] string CookieValue;
+        private readonly IIndexer<TodoTask>  _indexer;
+        private readonly ISearcher<TodoTask> _searcher;
+        private readonly Parser _parser;
+        private readonly CookieService _cookieService;
+        private readonly string _cookieValue;
+
+        public TodoController(Parser parser, CookieService cookieService, Producers producers, TodoTaskIndexer indexer, TodoTaskSearcher searcher)
+        {
+            _indexer = indexer;
+            _searcher = searcher;
+            _parser = parser;
+            _cookieService = cookieService;
+            _cookieValue = producers.CreateCookieValue();
+        }
 
         [Route("todo/"), HttpPost]
         public async Task<TodoTask> Post(string raw)
@@ -60,7 +67,7 @@ namespace Radio7.Todo.Server
         [Route("todo/authenticate"), HttpPost, AllowAnonymous]
         public void Authenticate(string token)
         {
-            if (token.Equals(CookieValue, StringComparison.Ordinal))
+            if (token.Equals(_cookieValue, StringComparison.Ordinal))
             {
                 _cookieService.Create(new HttpContextWrapper(HttpContext.Current));
             }

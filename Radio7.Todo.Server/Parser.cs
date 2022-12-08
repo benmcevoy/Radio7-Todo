@@ -2,14 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using Radio7.Todo.Server.Infrastructure;
-using Cormo.Injects;
 
 namespace Radio7.Todo.Server
 {
     public class Parser
     {
-        [Inject] Markdown _markdown;
+        private readonly Markdown _markdown;
         private const int NotFound = -1;
+
+        public Parser(Markdown markdown)
+        {
+            _markdown = markdown;
+        }
 
         public TodoTask Parse(string raw)
         {
@@ -50,6 +54,10 @@ namespace Radio7.Todo.Server
         {
             if (string.IsNullOrWhiteSpace(raw)) return "";
 
+            // special case - if first line contains no spaces then just return it, it's probably a url
+            var firstLine = GetFirstLine(raw);
+            if (!string.IsNullOrWhiteSpace(raw) && !firstLine.Contains(" ")) return firstLine;
+
             var terminator = SentenceTerminators(raw)
                 .Where(x => x.Item1)
                 .Min(x => x.Item2);
@@ -57,6 +65,11 @@ namespace Radio7.Todo.Server
             return (terminator == NotFound)
                 ? raw.Trim()
                 : raw.Substring(0, terminator).Trim();
+        }
+
+        private static string GetFirstLine(string raw)
+        {
+            return raw.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
         }
 
         private static IEnumerable<Tuple<bool, int>> SentenceTerminators(string raw)

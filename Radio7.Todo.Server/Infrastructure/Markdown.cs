@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Radio7.Unity.Decorators;
+using System;
 using System.Collections;
 using System.Security.Cryptography;
 using System.Text;
@@ -10,6 +11,7 @@ namespace Radio7.Todo.Server.Infrastructure
     /// This markup renderer is courtesy Brian Jeremy.
     /// http://www.brianjeremy.com/2007/12/07/revisied-markdownnet-library/
     /// </summary>
+    [Singleton]
     public class Markdown
     {
         private readonly string relativePathUrlPrefix;
@@ -52,7 +54,7 @@ namespace Radio7.Todo.Server.Infrastructure
 
         public Markdown() : this("") { }
 
-        public Markdown(string relativePathUrlPrefix)
+        protected Markdown(string relativePathUrlPrefix)
         {
             this.relativePathUrlPrefix = relativePathUrlPrefix;
             urls = new Hashtable();
